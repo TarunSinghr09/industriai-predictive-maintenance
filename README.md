@@ -6,6 +6,15 @@ Predicts machine failure, explains every prediction with SHAP, prioritizes risk 
 
 **Live demo:** https://industriai.streamlit.app
 
+## Screenshots
+**Live monitoring (simulated real-time sensor stream)**
+
+![Live monitoring](docs/Live.png)
+
+**Manual check with SHAP explanation and maintenance recommendation**
+
+![Manual check](docs/Manual.png)
+
 ## Features
 - **Live monitoring:** the AI4I 2020 dataset is replayed row by row as simulated sensor readings, with live Plotly charts and a risk-prioritized maintenance queue.
 - **Manual check:** enter air/process temperature, speed, torque and tool wear to get status, risk %, SHAP reason and recommended actions instantly.
