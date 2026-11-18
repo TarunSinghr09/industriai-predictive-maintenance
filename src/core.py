@@ -78,6 +78,14 @@ def train(save: bool = True) -> dict:
     return bundle
 
 
+def holdout():
+    """The 25% hold-out split (same split used in train) for honest evaluation."""
+    df = add_features(load_data())
+    _, Xte, _, yte = train_test_split(df[FEATURES], df["failure"], test_size=0.25,
+                                      stratify=df["failure"], random_state=42)
+    return Xte, yte
+
+
 def load_bundle() -> dict:
     if not MODEL.exists():
         return train()

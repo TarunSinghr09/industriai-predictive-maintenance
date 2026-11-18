@@ -15,6 +15,17 @@ Predicts machine failure, explains every prediction with SHAP, prioritizes risk 
 
 ![Manual check](docs/Manual.png)
 
+## Pages
+| Page | What it does |
+|---|---|
+| Fleet Overview | Plant health, top-risk machines, per-machine drill-down |
+| Live Monitoring | Dataset replayed row by row as a simulated sensor stream |
+| Machine Check | Manual input form with preset failure scenarios |
+| Maintenance Planner | Expected downtime loss, work orders, net benefit of servicing |
+| Model Performance | Confusion matrix, ROC, PR curve, threshold tuning, SHAP |
+| Data Explorer | Failure modes, distributions, correlations, raw data |
+| About | Pipeline, limitations, stack |
+
 ## Features
 - **Live monitoring:** the AI4I 2020 dataset is replayed row by row as simulated sensor readings, with live Plotly charts and a risk-prioritized maintenance queue.
 - **Manual check:** enter air/process temperature, speed, torque and tool wear to get status, risk %, SHAP reason and recommended actions instantly.
@@ -56,8 +67,10 @@ pytest -q
 
 ## Structure
 ```
-app.py            Streamlit UI
+app.py            Fleet Overview (home page)
+pages/            Live Monitoring, Machine Check, Planner, Model Performance, Data Explorer, About
 src/core.py       data, features, models, SHAP, risk and recommendations
+src/ui.py         shared Streamlit helpers (charts, fleet, caching)
 tests/            unit tests
 Dockerfile        container build
 .github/workflows CI
