@@ -19,3 +19,5 @@ jobs:
         run: ruff check .
       - name: Tests
         run: pytest -q
+      - name: Docker build
+        run: docker build -t industriai .
