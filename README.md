@@ -1,16 +1,58 @@
-# INDUSTRIAI - Industrial Predictive Maintenance (prototype)
+# INDUSTRIAI - Industrial Predictive Maintenance Platform
 
-Predicts machine failure, explains it with SHAP, prioritizes risk and recommends maintenance.
-Dataset: AI4I 2020 (UCI) in `data/ai4i2020.csv`.
+![CI](https://github.com/TarunSinghr09/industriai-predictive-maintenance/actions/workflows/ci.yml/badge.svg)
 
-## Run
+Predicts machine failure, explains every prediction with SHAP, prioritizes risk and recommends maintenance actions.
+
+**Live demo:** https://industriai.streamlit.app
+
+## Features
+- **Live monitoring:** the AI4I 2020 dataset is replayed row by row as simulated sensor readings, with live Plotly charts and a risk-prioritized maintenance queue.
+- **Manual check:** enter air/process temperature, speed, torque and tool wear to get status, risk %, SHAP reason and recommended actions instantly.
+- **Explainability:** SHAP (TreeExplainer) per-prediction and global feature importance.
+- **Maintenance logic:** physics-based failure-mode rules (tool wear, heat dissipation, power, overstrain) combined with model risk.
+
+## Model
+Random Forest and XGBoost are trained on engineered features (temperature difference, mechanical power, wear x torque); the one with the best ROC-AUC is deployed.
+
+| Model | ROC-AUC | Recall | Precision |
+|---|---|---|---|
+| Random Forest | 0.971 | 0.812 | 0.908 |
+| XGBoost | 0.982 | 0.859 | 0.689 |
+
+25% stratified hold-out. The dataset is simulated/synthetic (UCI AI4I 2020), so results are a prototype benchmark, not proof of real-plant performance.
+
+## Tech stack
+Python, Pandas, scikit-learn, XGBoost, SHAP, Streamlit, Plotly, pytest, GitHub Actions, Docker.
+
+## Run locally
 ```
 py -m venv .venv
 .venv\Scripts\pip install -r requirements.txt
-.venv\Scripts\python src\core.py            # trains RF + XGBoost, saves best to models/
+.venv\Scripts\python src\core.py
 .venv\Scripts\python -m streamlit run app.py
 ```
 
+## Run with Docker
+```
+docker build -t industriai .
+docker run -p 8501:8501 industriai
+```
+
+## Tests
+```
+pip install pytest
+pytest -q
+```
+
 ## Structure
-- `src/core.py` - data, feature engineering, models, SHAP, risk levels, recommendations
-- `app.py` - Streamlit UI: Live Monitoring (dataset replayed row by row), Manual Check form, Model Info
+```
+app.py            Streamlit UI
+src/core.py       data, features, models, SHAP, risk and recommendations
+tests/            unit tests
+Dockerfile        container build
+.github/workflows CI
+```
+
+## Future work
+Real sensor ingestion (MQTT/OPC-UA), model drift monitoring, per-failure-mode classifiers, alert notifications.
