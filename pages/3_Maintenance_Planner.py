@@ -41,7 +41,7 @@ edited = st.data_editor(
     column_config={"status": st.column_config.SelectboxColumn(
         "status", options=["Open", "Scheduled", "In progress", "Done"], required=True)},
     disabled=["priority", "machine", "level", "risk_pct", "exp_loss", "urgency", "action"],
-    hide_index=True, use_container_width=True)
+    hide_index=True, width="stretch")
 st.download_button("Download work orders (CSV)", edited.to_csv(index=False).encode(),
                    "work_orders.csv", "text/csv")
 done = int((edited.status == "Done").sum())

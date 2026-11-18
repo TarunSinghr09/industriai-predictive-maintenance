@@ -35,25 +35,30 @@ with a:
     fig = go.Figure(go.Heatmap(z=cm, x=["Pred OK", "Pred Fail"], y=["Actual OK", "Actual Fail"],
                                text=cm, texttemplate="%{text}", colorscale="Blues", showscale=False))
     fig.update_layout(title="Confusion matrix", height=330, margin=dict(l=0, r=0, t=40, b=0), yaxis_autorange="reversed")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 with b:
     fpr, tpr, _ = roc_curve(yte, p)
     fig = go.Figure(go.Scatter(x=fpr, y=tpr, name="ROC"))
     fig.add_trace(go.Scatter(x=[0, 1], y=[0, 1], line=dict(dash="dot"), name="random"))
+    tn, fp, fn, tp = cm.ravel()
+    fig.add_trace(go.Scatter(x=[fp / (fp + tn)], y=[tp / (tp + fn)], mode="markers",
+                             marker=dict(size=13, color="#d62f2f"), name=f"threshold {thr:.2f}"))
     fig.update_layout(title="ROC curve", height=330, xaxis_title="False positive rate",
                       yaxis_title="True positive rate", margin=dict(l=0, r=0, t=40, b=0))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 c, d = st.columns(2)
 with c:
     pr, rc, _ = precision_recall_curve(yte, p)
-    fig = go.Figure(go.Scatter(x=rc, y=pr))
+    fig = go.Figure(go.Scatter(x=rc, y=pr, name="PR"))
+    fig.add_trace(go.Scatter(x=[tp / (tp + fn)], y=[tp / max(tp + fp, 1)], mode="markers",
+                             marker=dict(size=13, color="#d62f2f"), name=f"threshold {thr:.2f}"))
     fig.update_layout(title="Precision-recall curve", height=330, xaxis_title="Recall", yaxis_title="Precision",
                       margin=dict(l=0, r=0, t=40, b=0))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 with d:
     st.markdown("**Model comparison**")
-    st.dataframe(pd.DataFrame(pred.bundle["scores"]).T.round(3), use_container_width=True)
+    st.dataframe(pd.DataFrame(pred.bundle["scores"]).T.round(3), width="stretch")
     st.caption("Failures are rare (~3.4%), so recall and precision matter more than accuracy.")
 
 st.subheader("Explainability (SHAP)")
@@ -68,11 +73,11 @@ e, f = st.columns(2)
 with e:
     fig = go.Figure(go.Bar(x=imp[order], y=[core.LABELS[core.FEATURES[i]] for i in order], orientation="h"))
     fig.update_layout(title="Global importance (mean |SHAP|)", height=380, margin=dict(l=0, r=0, t=40, b=0))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 with f:
     feat = st.selectbox("Dependence plot feature", core.FEATURES, format_func=core.LABELS.get)
     j = core.FEATURES.index(feat)
     fig = go.Figure(go.Scatter(x=sample[feat], y=sv[:, j], mode="markers", marker=dict(size=5, opacity=0.6)))
     fig.update_layout(title=f"How {core.LABELS[feat]} moves risk", xaxis_title=core.LABELS[feat],
                       yaxis_title="SHAP value", height=330, margin=dict(l=0, r=0, t=40, b=0))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")

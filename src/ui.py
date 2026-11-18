@@ -91,10 +91,10 @@ def show_result(p, expl_full, actions, urgency):
     color = {"LOW": "green", "MEDIUM": "orange", "HIGH": "orange", "CRITICAL": "red"}[lvl]
     c1, c2 = st.columns([1, 1.4])
     with c1:
-        st.plotly_chart(gauge(p), use_container_width=True)
+        st.plotly_chart(gauge(p), width="stretch")
         st.markdown(f"### Status: :{color}[{core.status_of(p)}]  \n**Risk level:** {lvl}")
     with c2:
-        st.plotly_chart(shap_bar(expl_full), use_container_width=True)
+        st.plotly_chart(shap_bar(expl_full), width="stretch")
     st.info("**Reason:** " + core.reason_text(expl_full))
     st.markdown(f"**Priority:** {urgency}")
     for a in actions:

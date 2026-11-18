@@ -50,20 +50,20 @@ def render():
         f = go.Figure(go.Scatter(x=w.t, y=w.prob * 100, mode="lines+markers", line=dict(color="#d62f2f")))
         f.add_hline(y=30, line_dash="dot", annotation_text="HIGH")
         f.update_layout(title="Failure risk (%)", height=280, margin=dict(l=0, r=0, t=40, b=0), yaxis_range=[0, 100])
-        a.plotly_chart(f, use_container_width=True)
+        a.plotly_chart(f, width="stretch")
         g = go.Figure()
         g.add_trace(go.Scatter(x=w.t, y=w.torque, name="Torque (Nm)"))
         g.add_trace(go.Scatter(x=w.t, y=w.proc_temp - 273.15, name="Process temp (C)", yaxis="y2"))
         g.update_layout(title="Torque & temperature", height=280, margin=dict(l=0, r=0, t=40, b=0),
                         yaxis2=dict(overlaying="y", side="right"), legend=dict(orientation="h"))
-        b.plotly_chart(g, use_container_width=True)
+        b.plotly_chart(g, width="stretch")
         a2, b2 = st.columns(2)
         h = go.Figure(go.Scatter(x=w.t, y=w.speed, line=dict(color="#2e7bd6")))
         h.update_layout(title="Rotational speed (rpm)", height=240, margin=dict(l=0, r=0, t=40, b=0))
-        a2.plotly_chart(h, use_container_width=True)
+        a2.plotly_chart(h, width="stretch")
         i = go.Figure(go.Scatter(x=w.t, y=w.tool_wear, line=dict(color="#8a5cd6")))
         i.update_layout(title="Tool wear (min)", height=240, margin=dict(l=0, r=0, t=40, b=0))
-        b2.plotly_chart(i, use_container_width=True)
+        b2.plotly_chart(i, width="stretch")
     with alerts:
         st.subheader("Risk-prioritized maintenance queue")
         q = log[log.level.isin(["CRITICAL", "HIGH"])].sort_values("prob", ascending=False).head(8)
@@ -72,7 +72,7 @@ def render():
         else:
             q = q.assign(prob=(q.prob * 100).round(1))
             st.dataframe(q[["machine", "level", "prob", "reason", "action"]].rename(columns={"prob": "risk %"}),
-                         use_container_width=True, hide_index=True)
+                         width="stretch", hide_index=True)
 
 
 if st.session_state.running:
