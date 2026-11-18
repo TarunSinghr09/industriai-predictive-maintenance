@@ -1,10 +1,11 @@
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-import pandas as pd
 import streamlit as st
 
+import core
 import ui
 
 ui.setup("Maintenance Planner", "🗓️")
@@ -20,7 +21,7 @@ with st.sidebar:
     thr = st.slider("Service machines with risk above", 0.05, 0.9, 0.3, 0.05)
 
 fleet = fleet.assign(
-    exp_loss=fleet.prob * cost_hr * fail_hrs,
+    exp_loss=core.expected_loss(fleet.prob, cost_hr, fail_hrs),
     priority=lambda d: d.exp_loss.rank(ascending=False, method="first").astype(int))
 sel = fleet[fleet.prob >= thr]
 avoided = sel.exp_loss.sum()

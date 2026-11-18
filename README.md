@@ -61,7 +61,8 @@ docker run -p 8501:8501 industriai
 
 ## Tests
 ```
-pip install pytest
+pip install -r requirements-dev.txt
+ruff check .
 pytest -q
 ```
 

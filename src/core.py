@@ -1,11 +1,12 @@
 """Core logic: data, model, SHAP explanation, risk scoring, recommendations."""
 from pathlib import Path
+
 import joblib
 import numpy as np
 import pandas as pd
 import shap
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import roc_auc_score, recall_score, precision_score
+from sklearn.metrics import precision_score, recall_score, roc_auc_score
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
 
@@ -154,7 +155,8 @@ def rule_flags(r: pd.Series) -> list[str]:
 
 RECOMMENDATIONS = {
     "TWF": "Replace the cutting tool at the next stop - wear is near the 200-240 min failure window.",
-    "HDF": "Check coolant flow and cleaning of heat exchanger; raise rotational speed or reduce load to restore the temperature gap.",
+    "HDF": "Check coolant flow and heat-exchanger cleaning; raise rotational speed or reduce load "
+           "to restore the temperature gap.",
     "PWF": "Inspect drive/motor - power is outside the safe 3.5-9 kW band. Reduce torque or speed set-point.",
     "OSF": "Reduce torque and tool load; wear x torque is above the overstrain limit for this product type.",
 }
@@ -177,6 +179,11 @@ def recommend(row: pd.Series, p: float, expl: list) -> tuple[list[str], str]:
         urgency = "No action - continue monitoring"
         actions = actions or ["All parameters within normal range."]
     return actions, urgency
+
+
+def expected_loss(prob, cost_per_hour: float, downtime_hours: float):
+    """Expected downtime loss = failure probability x downtime hours x cost per hour."""
+    return prob * cost_per_hour * downtime_hours
 
 
 def reason_text(expl: list) -> str:

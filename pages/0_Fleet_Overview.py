@@ -1,12 +1,12 @@
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-import core
 import ui
 
 ui.setup("Fleet Overview", "🏭")
@@ -26,14 +26,14 @@ k[4].metric("Expected failures", f"{fleet.prob.sum():.1f}")
 a, b = st.columns([1, 1.6])
 order = ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
 with a:
-    fig = go.Figure(go.Pie(labels=order, values=[int(counts.get(l, 0)) for l in order], hole=0.55,
-                           marker_colors=[ui.COLORS[l] for l in order], sort=False))
+    fig = go.Figure(go.Pie(labels=order, values=[int(counts.get(lv, 0)) for lv in order], hole=0.55,
+                           marker_colors=[ui.COLORS[lv] for lv in order], sort=False))
     fig.update_layout(title="Fleet health", height=320, margin=dict(l=0, r=0, t=40, b=0))
     st.plotly_chart(fig, width="stretch")
 with b:
     top = fleet.head(10).iloc[::-1]
     fig = go.Figure(go.Bar(x=top.prob * 100, y=top.machine, orientation="h",
-                           marker_color=[ui.COLORS[l] for l in top.level]))
+                           marker_color=[ui.COLORS[lv] for lv in top.level]))
     fig.update_layout(title="Top 10 machines by failure risk (%)", height=320, margin=dict(l=0, r=0, t=40, b=0))
     st.plotly_chart(fig, width="stretch")
 

@@ -1,0 +1,12 @@
+[tool.ruff]
+line-length = 130
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+# Streamlit pages must modify sys.path before importing local modules
+ignore = ["E402"]
+
+[tool.ruff.lint.per-file-ignores]
+# long prose lines inside a markdown string
+"pages/6_About.py" = ["E501"]
