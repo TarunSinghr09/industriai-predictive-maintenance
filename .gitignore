@@ -4,3 +4,4 @@ __pycache__/
 data/ai4i.zip
 .claude/
 models/*.joblib
+docs/*.pdf
