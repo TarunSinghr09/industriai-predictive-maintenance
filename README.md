@@ -7,13 +7,29 @@ Predicts machine failure, explains every prediction with SHAP, prioritizes risk 
 **Live demo:** https://industriai.streamlit.app
 
 ## Screenshots
-**Live monitoring (simulated real-time sensor stream)**
+**Fleet overview** - plant health, top-risk machines and per-machine drill-down
 
-![Live monitoring](docs/Live.png)
+![Fleet overview](docs/fleet-overview.png)
 
-**Manual check with SHAP explanation and maintenance recommendation**
+**Live monitoring** - simulated real-time sensor stream with live charts and a risk-prioritized queue
 
-![Manual check](docs/Manual.png)
+![Live monitoring](docs/live-monitoring.png)
+
+**Machine check** - manual input with status, risk, SHAP reason and maintenance advice
+
+![Machine check](docs/machine-check.png)
+
+**Maintenance planner** - expected loss, work orders and net benefit of servicing
+
+![Maintenance planner](docs/maintenance-planner.png)
+
+**Model performance** - confusion matrix, ROC and PR curves, threshold control, SHAP
+
+![Model performance](docs/model-performance.png)
+
+**Data explorer**
+
+![Data explorer](docs/data-explorer.png)
 
 ## Pages
 | Page | What it does |
