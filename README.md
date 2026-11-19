@@ -58,6 +58,7 @@ py -m venv .venv
 docker build -t industriai .
 docker run -p 8501:8501 industriai
 ```
+The image is built on every push by CI and was also run locally (Docker Desktop, health check and UI verified).
 
 ## Tests
 ```
